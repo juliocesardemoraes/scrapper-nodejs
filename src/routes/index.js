@@ -1,14 +1,10 @@
-const express = require("express");
+const { Router } = require("express");
 const scrape = require("../functions/scrape");
 const validator = require("validator");
 
-const router = express.Router();
+const router = Router();
 
-router.get("/", function (req, res, next) {
-  res.send("AHHHH");
-});
-
-router.get("/api/scrape", async function (req, res, next) {
+router.get("/", async function (req, res, next) {
   const keyword = validator.escape("" + req.query.keyword).trim(); //cleaning input
 
   if (keyword == "undefined" || !keyword) {
