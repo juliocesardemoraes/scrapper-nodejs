@@ -5,10 +5,30 @@ const slug = require("../helpers/slug");
 // const readFromFile = require('./readFromFile')
 // const writeToFile = require('./writeFromFile')
 
-const BASE_URL = "https://www.amazon.com/s?k=";
-const options = {
-  headers: browserHeaders,
+const PRODUCTION_HEADERS = {
+  headers: {
+    "User-Agent":
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
+    Accept: "text/html",
+    Referer: "https://www.amazon.com/",
+    "Accept-Encoding": "gzip, deflate",
+    "X-Requested-With": "XMLHttpRequest",
+    "Cache-Control": "no-cache",
+  },
 };
+
+const LOCAL_HEADERS = {
+  headers: {
+    "User-Agent":
+      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36",
+  },
+};
+
+const HEADERS =
+  process.env.APP_ENV == "prod" ? PRODUCTION_HEADERS : LOCAL_HEADERS;
+
+const BASE_URL = "https://www.amazon.com/s?k=";
+
 const selectors = {
   products: "[data-component-type=s-search-result]",
   title:
@@ -20,7 +40,7 @@ const selectors = {
 
 async function fetchPage(keyword) {
   try {
-    let res = await axios.get(BASE_URL + keyword, options);
+    let res = await axios.get(BASE_URL + keyword, HEADERS);
     return res; //return false to test amazon error response
   } catch (err) {
     console.log(err);
